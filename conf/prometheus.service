@@ -1,0 +1,9 @@
+[Unit]
+Description=https://prometheus.io
+
+[Service]
+Restart=on-failure
+ExecStart=/TRS/APP/prometheus/prometheus --config.file=/TRS/APP/prometheus/prometheus.yml --storage.tsdb.retention=90d  --web.enable-lifecycle
+
+[Install]
+WantedBy=multi-user.target
