@@ -9,3 +9,7 @@ docker+docekr-compsoe
 prometheus的配置文件模板已经内置镜像，启动后容器内目录：/opt/prometheus/temples，包含rules，sd_config，prometheus.yml.temp（进阶）
 >
 下载docke-compose.yaml文件之后，需要在同一目录下下载prometheus.yml文件，才能保证基本使用。
+>
+dockerfile的用法：git clone 
+>
+docker build name:tag  .
