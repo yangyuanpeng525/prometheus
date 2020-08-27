@@ -1,0 +1,149 @@
+# my global config
+global:
+  scrape_interval:     15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+       - 192.168.200.118:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+   - "rules/*.yml"
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9090']
+
+#pushgateway
+  - job_name: 'pushgateway'
+    static_configs:
+    - targets: ['localhost:9091']
+    honor_labels: true
+
+#jenkins监控
+  - job_name: "jenkins-exporter"
+    metrics_path: '/prometheus'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/jenkins.yml']
+        refresh_interval: 5s
+# nginx监控
+  - job_name: "nginx-exporter"
+   # metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/nginx.yml']
+        refresh_interval: 5s
+# redis监控
+  - job_name: "redis-exporter"
+   # metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/redis.yml']
+        refresh_interval: 5s
+# es监控
+  - job_name: "es-exporter"
+   # metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/es.yml']
+        refresh_interval: 5s
+# mongodb监控
+  - job_name: "mongo-exporter"
+   # metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/mongo.yml']
+        refresh_interval: 5s
+
+# haproxy监控
+  - job_name: "haproxy-exporter"
+   # metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/haproxy.yml']
+        refresh_interval: 5s
+  # 基于consul发现node节点
+  - job_name: 'consul-node-exporter'
+    consul_sd_configs:
+      - server: '192.168.200.118:8500'
+        services: []
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: .*node_exporter.*
+        action: keep
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+# 基于consul发现数据库
+  - job_name: 'consul-mysql-exporter'
+    consul_sd_configs:
+      - server: '192.168.200.118:8500'
+        services: []
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: .*mysql_exporter.*
+        action: keep
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+# jmx内存监控
+  - job_name: "jmx"
+    metrics_path: '/metrics'
+    scheme: http
+    file_sd_configs:
+      - files: ['/TRS/APP/prometheus/sd_config/jmx.yml']
+        refresh_interval: 5s
+#web监控
+  - job_name: web_status
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://www.devdemo.trs.net.cn
+        - http://apolloweb.devdemo.trs.net.cn/apollo-web
+        labels:
+          group: web
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: 192.168.200.116:9125
+#tcp监控
+  - job_name: "blackbox_telnet_port"
+    scrape_interval: 5s
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+        - targets: ['192.168.200.116:8082']
+          labels:
+            group: 'apollo'
+        - targets: ['192.168.200.116:8081']
+          labels:
+            group: 'apollo'
+        - targets: ['192.168.200.116:8083']
+          labels:
+            group: 'apollo'
+    relabel_configs:
+        - source_labels: [__address__]
+          target_label: __param_target
+        - source_labels: [__param_target]
+          target_label: instance
+        - target_label: __address__
+          replacement: 192.168.200.116:9125
