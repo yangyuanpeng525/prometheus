@@ -14,4 +14,4 @@ dockerfile的用法：git clone  https://github.com/yangyuanpeng525/prometheus.g
 >
 cd prometheus
 >
-docker build name:tag  .
+docker build -t name:tag  .
