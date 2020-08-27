@@ -1,0 +1,22 @@
+
+version : '3.7'
+networks:
+  prometheus-net:
+    external: true
+services:
+  prometheus:
+        container_name : prometheus
+        hostname: prometheus
+        networks:
+          prometheus-net:
+        image: registry.cn-hangzhou.aliyuncs.com/yangyuanpeng/prometheus:2.16.0
+        volumes:
+          - ./prometheus.yml:/opt/prometheus/prometheus.yml
+          - ./rules:/opt/prometheus/rules
+          - ./sd_config:/opt/prometheus/sd_config
+          - /etc/localtime:/etc/localtime:ro
+        ports :
+                - 9090:9090
+        restart: always
+        environment:
+          TZ: Asia/Shanghai
