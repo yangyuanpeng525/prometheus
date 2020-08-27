@@ -39,35 +39,35 @@ scrape_configs:
     metrics_path: '/prometheus'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/jenkins.yml']
+      - files: ['/opt/prometheus/sd_config/jenkins.yml']
         refresh_interval: 5s
 # nginx监控
   - job_name: "nginx-exporter"
    # metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/nginx.yml']
+      - files: ['/opt/prometheus/sd_config/nginx.yml']
         refresh_interval: 5s
 # redis监控
   - job_name: "redis-exporter"
    # metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/redis.yml']
+      - files: ['/opt/prometheus/sd_config/redis.yml']
         refresh_interval: 5s
 # es监控
   - job_name: "es-exporter"
    # metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/es.yml']
+      - files: ['/opt/prometheus/sd_config/es.yml']
         refresh_interval: 5s
 # mongodb监控
   - job_name: "mongo-exporter"
    # metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/mongo.yml']
+      - files: ['/opt/prometheus/sd_config/mongo.yml']
         refresh_interval: 5s
 
 # haproxy监控
@@ -75,7 +75,7 @@ scrape_configs:
    # metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/haproxy.yml']
+      - files: ['/opt/prometheus/sd_config/haproxy.yml']
         refresh_interval: 5s
   # 基于consul发现node节点
   - job_name: 'consul-node-exporter'
@@ -104,7 +104,7 @@ scrape_configs:
     metrics_path: '/metrics'
     scheme: http
     file_sd_configs:
-      - files: ['/TRS/APP/prometheus/sd_config/jmx.yml']
+      - files: ['/opt/prometheus/sd_config/jmx.yml']
         refresh_interval: 5s
 #web监控
   - job_name: web_status
